@@ -1,25 +1,62 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Hero from './hero'
+import TopNavBar from './TopNavBar'
+import { Route, Routes } from 'react-router-dom'
+import NewHome from './NewHome'
+import EventFullDisplay from './EventFullDisplay'
+import CreateEvent from './CreateEvent'
+import SignIn from './signIn'
+import SearchResults from './searchResults'
+import { ErrorBoundary } from 'react-error-boundary';
 
-function App() {
+function ErrorHandler({ error }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div role="alert">
+      <p>An error occurred:</p>
+      <pre>{error.message}</pre>
     </div>
-  );
+  )
 }
 
-export default App;
+export default function App() {
+  return (
+    <ErrorBoundary FallbackComponent={ErrorHandler}>
+      <div>
+      <Routes>
+        <Route path="/" element={
+          <><TopNavBar />
+            <Hero />
+            <NewHome />
+          </>
+        } />
+
+        <Route path="/eventSummary/:eventId" element={
+          <><TopNavBar />
+            <EventFullDisplay />
+          </>
+        } />
+        <Route path="/create-event" element={
+          <><TopNavBar />
+            <CreateEvent />
+          </>
+        } />
+
+        <Route path="/signIn" element={
+          <><TopNavBar />
+            <SignIn />
+          </>
+        } />
+        <Route path="/searchResults" element={
+          <><TopNavBar />
+            <SearchResults />
+          </>
+        } />
+
+
+            
+      </Routes>
+    </div>
+    </ErrorBoundary >
+    
+  )
+}

@@ -1,82 +1,46 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React,{useState,useEffect,useContext} from 'react'
 import { Icon } from '@iconify/react';
-import { useParams, } from 'react-router-dom'
+import { useParams,useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import ScaleLoader from "react-spinners/ScaleLoader";
-import { updateCurrentUser } from 'firebase/auth';
 import TicketonContext from './context/ticketon-context';
-
+import { toast, ToastContainer } from 'react-toastify';
+import RotateLoader from "react-spinners/RotateLoader";
 
 
 
 export default function EventFullDisplay() {
-   const {currUser} = useContext(TicketonContext)
- 
+    const { currUser, signInWithGoogle, } = useContext(TicketonContext)
+ const navigate = useNavigate()
     const {eventId} = useParams()
     const [bookBasket, setBookBasket] = useState([])
     const [post, setPost] = useState(null)
     const [wait,setWait] = useState(false)
     let [color, setColor] = useState("purple");
+    let [color2, setColor2] = useState("gold");
     let [t1, setT1] = useState(1)
     const [t2, setT2] = useState(1)
     const [t3, setT3] = useState(1)
     const [t4, setT4] = useState(1)
     const [t5, setT5] = useState(1)
-    const [remTicket,setRemTicket] = useState(0)
+    const [loading2, setLoading2] = useState(false)
+    const [errorMessage, setErrorMessage] = useState([])
 
     console.log(bookBasket)
 
-    const encodedValue = encodeURIComponent(eventId)
-    const baseUrl = `http://localhost:3003/allEvents?eventId=${encodedValue}`
+   
 
-    /* const getPost = async () => {
-        try {
-            await axios.get(baseUrl)
-                .then((response) => {
-                    setPost(response.data);
-                    console.log(post)
-                });
-        }
-        catch (error) {
-            console.log(error)
-
-        }
-       
-        
-    };*/
+ 
     const handleBook = (item) => {
-      /*  const itemExist = bookBasket.find((event) => event.ticketLevel = item.ticketLevel)
-        let newItem
-        if (!itemExist) {
-            newItem = [...bookBasket, item]
-        }
-        else {
-            newItem =bookBasket.map(event => event.ticketLevel === item.ticketLevel ? { ...event, qty: event.qty + value} : { ...event })
-        } */
         setBookBasket([...bookBasket, item])
     }
 
     const removeBook = (ticketId) => {
-    
-
-       // const obj = bookBasket.filter(item => item.ticketLevel === ticket)
-        setBookBasket(bookBasket.filter(item => item.id !== ticketId))
-       /* const index = bookBasket.findIndex(
-            (item) => item.ticketLevel === ticket
-        );
-
-        let newBook = [...bookBasket];
-
-        if (index >= 0) {
-           setBookBasket(newBook.splice(index, 1));
-        } else {
-            console.warn(
-                `Can't remove product(id: ${bookBasket}) as its not in the basket!`
-            )
-        }*/
+        setBookBasket(bookBasket.filter(item => item.ticketId !== ticketId))
     }
-  
+    const encodedValue = encodeURIComponent(eventId)
+    const baseUrl = `http://localhost:3003/allEvents?eventId=${encodedValue}`
    useEffect(() => {
        const getPost = async () => {
            setWait(true)
@@ -91,20 +55,67 @@ export default function EventFullDisplay() {
        getPost()
    }, []);
     
+    const handleBooking = () => {
+        navigate ("/generateTicket", {state: bookBasket})
+    }
+  
+    
+    const handleSaveEvent = () => {
+        if (currUser) {
+        setLoading2(true)
+        bookBasket.map(item => (
+        axios
+            .post("http://localhost:3003/saveEvents", {
+                eventId: item.eventId,
+                title:item.title,
+                image: item.image,
+                ticketId: item.ticketId,
+                ticketLevel: item.ticketLevel,
+                pricePerTicket:item.pricePerTicket,
+                qty: item.qty,
+                userId: currUser.email,
+                venue: item.venue,
+                country: item.country,
+                province: item.province,
+                dateAndTime: item.dateAndTime,
+                           
+            }).then(function (response) {
+                setLoading2(false)
+                setColor2('white')
+                //  setUploadSuccess(true)
+                console.log(response);
 
+                
+                setBookBasket([])
+                //   navigate('/eventSummary/:eventId',{state:eventId})
+            }).catch(function (errors) {
+                setErrorMessage(errors)
+                console.log(errorMessage);
+
+            })      
+        ))
+            toast("Tickets saved successfully")
+        }
+
+        else {
+            navigate("/signIn")
+        }
+    }
 
     const getPost = post?.find((item) => item.eventId === eventId);
     return (
        
       <div className='container w-[90%] mx-auto'>
           
-          
+            <ToastContainer />
 
 
-         { post? <div><div className='md:flex justify-between pt-5' >
+         { post? 
+         <div>
+            <div className='md:flex justify-between pt-5' >
               <div className=" md:w-[40%] w-full ">
                 
-                  {/*"   <!-- div with ribbon -->"*/}
+                
 
                   <div className="relative bg-white border w-full shadow-2xl">
                       <img src={getPost.image}
@@ -157,11 +168,19 @@ export default function EventFullDisplay() {
                         </p>
                         <hr />
                     </div>
-                  {/*" <!-- end div with ribbon -->"*/}
+                
               </div>
 
               
-               <div className=" md:w-[50%] w-full my-5">
+                <div className=" md:w-[50%] w-full my-5">
+                    <div className='w-full my-4 shadow-2xl'>
+                        {!currUser &&
+                            <div className='mx-auto w-full h-[200px] my-auto px-10'>
+                                <h1 className='text-center p-6'>Please Login to select tickets</h1>
+                                <button onClick={signInWithGoogle} className="flex justify-center item-center p-2 w-full my-auto bg-black"  ><Icon icon="flat-color-icons:google" className='text-[40px]' />
+                                    <h1 className='p-2 text-lg font-bold'>Sign In With Google</h1></button>
+                            </div>}
+                    </div>
                     <div className='shadow-2xl grid grid-cols-5'>
                         {bookBasket[0]? <><h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'>Ticket type</h1>
                         <h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'> Price per Ticket </h1>
@@ -169,142 +188,258 @@ export default function EventFullDisplay() {
                         <h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'>Total </h1>
                             <h1 className=' text-[11px] px-4 py-2  text-bold bg-slate-200'>Action</h1></> : 
                             <div className=' col-span-5 p-4'><h1 className='text-center'> NO TICKET SELECTED</h1></div>
-                            }
-                  {bookBasket?.map((item) =>(<>
-                      <h1 className='text-[11px] font-bold p-4'>{item.ticketLevel}</h1>
-                      <h1 className='text-[11px] font-bold p-4'> ${item.price}</h1>
+                        }             
+                    </div>                 
+                  {bookBasket?.map((item) =>(
+                      <div className=' grid grid-cols-5'>
+                      <h1 className='text-[11px] font-bold p-4' key={item.ticketId }>{item.ticketLevel}</h1>
+                      <h1 className='text-[11px] font-bold p-4'> ${item.pricePerTicket}</h1>
                       <h1 className='text-[11px] font-bold p-4'>{item.qty}</h1>
-                      <h1 className='text-[11px] font-bold p-4'>${item.price === 0? item.price * item.qty: "0"}</h1>
-                      <h1 className=' cursor-pointer text-[11px] p-4 text-blue-500 text-bold' onClick={() => removeBook(item.id)}>Remove ticket</h1>
-                  </>))}
+                      <h1 className='text-[11px] font-bold p-4'>${item.pricePerTicket !== 0? item.pricePerTicket * item.qty: "0"}</h1>
+                      <h1 className=' cursor-pointer text-[11px] p-4 text-blue-500 text-bold' onClick={() => removeBook(item.ticketId)}>Remove ticket</h1>
+                      </div>))}
                         
-                    </div>
-                    {bookBasket[0] && <div className='mx-auto py-5 flex justify-between'>
-                        <button className='px-5 py-3 rounded-none bg-slate-400'>Book Now!</button>
-                        <button className='px-5 py-3 rounded-none bg-slate-400'>Save for later</button>
-                    </div>}
+                            {bookBasket[0] && <div className='mx-auto py-5 flex justify-between'>
+                                <button className='px-5 py-3 rounded-none bg-transparent text-amber-700 hover:text-slate-400 border-t-2 hover:bg-transparent hover:border-t-amber-600 flex justify-center items-center rounded-b-full'
+                                    onClick={handleBooking}><Icon icon="fluent:book-add-20-filled" className='text-[30px] ' />Book Now!</button>
+                                 {loading2 && <RotateLoader color={color2} loading={loading2} size={10} className='pt-0' />}
+                                
+                                <button className='px-5 py-3 rounded-none bg-transparent text-amber-700 hover:text-slate-400 border-t-2 hover:bg-transparent hover:border-t-amber-600 flex justify-center items-center rounded-b-full'
+                                    onClick={handleSaveEvent}><Icon icon="fluent:save-20-filled" className='text-[30px]' />Save for later</button>
+                               
+                            </div>}
+                   
+                   
+                      
+                  
+                        
+
+                        {getPost.ticketFrom === null &&
+                            <div className=' mt-8'>
+                                <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
+                                    <div className='font-bold p-2'>Free event</div>
+                                    <div className='font-bold p-2'>${0}</div>
+                                    <div className='font-bold p-2 flex items-center'>
+                                        <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
+                                            onClick={() => t1 > 1 && setT1(t1 - 1)} /> {t1}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
+                                                onClick={() => setT1(t1 + 1)} /> </div>
+                                    <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                        ticketLevel: "Free event",
+                                        pricePerTicket: 0,
+                                        qty: t1,
+                                        ticketId: "FREE_EVENT" + Date.now(),
+                                        title: getPost.title,
+                                        image: getPost.image,
+                                        eventId: getPost.eventId,
+                                        userId: currUser.email,
+                                        venue: getPost.venue,
+                                        country: getPost.country,
+                                        province:getPost.province,
+                                        dateAndTime:getPost.dateAndTime
+
+                                    })} >Add</button>
+                                    </div>
+                                    </div></div>}
+                        
+                            {getPost.ticketLevels.ticket1 && getPost.priceLevels.price1 &&
+                                <div >
+                                    <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2  mt-8' >
+                                        <div className='font-bold p-2'>{getPost.ticketLevels.ticket1}</div>
+                                        <div className='font-bold p-2'>${getPost.priceLevels.price1}</div>
+                                        <div className='font-bold p-2 flex items-center'>
+                                            <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
+                                                onClick={() => t1 > 1 && setT1(t1 - 1)} /> {t1}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
+                                                    onClick={() => setT1(t1 + 1)} /> </div>
+                                        <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                            ticketLevel: getPost.ticketLevels.ticket1,
+                                            pricePerTicket: getPost.priceLevels.price1,
+                                            qty: t1,
+                                            ticketId: getPost.ticketLevels.ticket1 + Date.now(),
+                                            title: getPost.title,
+                                            image: getPost.image,
+                                            eventId: getPost.eventId,
+                                            userId: currUser.email,
+                                            venue: getPost.venue,
+                                            country: getPost.country,
+                                            province: getPost.province,
+                                            dateAndTime: getPost.dateAndTime
+
+
+                                        })} >Add</button>
+                                        </div>
+                                    </div></div>}
+
+                            {getPost.ticketLevels.ticket2 && getPost.priceLevels.price2 &&
+                                <div >
+                                    <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
+                                        <div className='font-bold p-2'>{getPost.ticketLevels.ticket2}</div>
+                                        <div className='font-bold p-2'>${getPost.priceLevels.price2}</div>
+                                        <div className='font-bold p-2 flex items-center'>
+                                            <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
+                                                onClick={() => t2 > 1 && setT2(t2 - 1)} /> {t2}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
+                                                    onClick={() => setT2(t2 + 1)} /> </div>
+                                        <div className='font-bold p-2'>
+                                            
+                                          {currUser &&  <button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                            ticketLevel: getPost.ticketLevels.ticket2,
+                                            pricePerTicket: getPost.priceLevels.price2,
+                                            qty: t2,
+                                            ticketId: getPost.ticketLevels.ticket2 + Date.now(),
+                                            title: getPost.title,
+                                            image: getPost.image,
+                                            eventId: getPost.eventId,
+                                              userId: currUser.email,
+                                              venue: getPost.venue,
+                                              country: getPost.country,
+                                              province: getPost.province,
+                                              dateAndTime: getPost.dateAndTime
+
+
+
+                                        })} >Add</button>}
+                                        
+                                        </div>
+                                    </div></div>}
+                        
+
+                            {getPost.ticketLevels.ticket3 && getPost.priceLevels.price3 &&
+                                <div >
+                                    <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
+                                        <div className='font-bold p-2'>{getPost.ticketLevels.ticket3}</div>
+                                        <div className='font-bold p-2'>${getPost.priceLevels.price3}</div>
+                                        <div className='font-bold p-2 flex items-center'>
+                                            <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
+                                                onClick={() => t3 > 1 && setT3(t3 - 1)} /> {t3}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
+                                                    onClick={() => setT3(t3 + 1)} /> </div>
+                                        <div className='font-bold p-2'>
+                                            
+                                          {currUser&&  <button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                            ticketLevel: getPost.ticketLevels.ticket3,
+                                            pricePerTicket: getPost.priceLevels.price3,
+                                            qty: t3,
+                                            ticketId: getPost.ticketLevels.ticket3 + Date.now(),
+                                            title: getPost.title,
+                                            image: getPost.image,
+                                            eventId: getPost.eventId,
+                                              userId: currUser.email,
+                                              venue: getPost.venue,
+                                              country: getPost.country,
+                                              province: getPost.province,
+                                              dateAndTime: getPost.dateAndTime
+
+                                        })} >Add</button>}
+                                        
+                                        </div>
+                                    </div></div>}
+                        
+
+                            {getPost.ticketLevels.ticket1 && getPost.priceLevels.price4 &&
+                                <div >
+                                    <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
+                                        <div className='font-bold p-2'>{getPost.ticketLevels.ticket4}</div>
+                                        <div className='font-bold p-2'>${getPost.priceLevels.price4}</div>
+                                        <div className='font-bold p-2 flex items-center'>
+                                            <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
+                                                onClick={() => t4 > 1 && setT4(t4 - 1)} /> {t4}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
+                                                    onClick={() => setT4(t4 + 1)} /> </div>
+                                        <div className='font-bold p-2'>
+                                            
+                                         {currUser&&   <button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                            ticketLevel: getPost.ticketLevels.ticket4,
+                                            pricePerTicket: getPost.priceLevels.price4,
+                                            qty: t4,
+                                            ticketId: getPost.ticketLevels.ticket4 + Date.now(),
+                                            title: getPost.title,
+                                            image: getPost.image,
+                                             eventId: getPost.eventId,
+                                             venue: getPost.venue,
+                                             country: getPost.country,
+                                             province: getPost.province,
+                                             dateAndTime: getPost.dateAndTime,
+                                             
+
+
+                                        })} >Add</button>}
+                                        
+                                        </div>
+                                    </div></div>}
+
+                            {getPost.ticketLevels.ticket4 && getPost.priceLevels.price4 &&
+                                <div >
+                                    <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2'  >
+                                        <div className='font-bold p-2'>{getPost.ticketLevels.ticket5}</div>
+                                        <div className='font-bold p-2'>${getPost.priceLevels.price5}</div>
+                                        <div className='font-bold p-2 flex items-center'>
+                                            <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
+                                                onClick={() => t5 > 1 && setT5(t5 - 1)} /> {t5}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
+                                                    onClick={() => setT5(t5 + 1)} /> </div>
+                                        <div className='font-bold p-2'>
+                                           {currUser && <button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                            ticketLevel: getPost.ticketLevels.ticket5,
+                                            pricePerTicket: getPost.priceLevels.price5,
+                                            qty: t5,
+                                            ticketId: getPost.ticketLevels.ticket5 + Date.now(),
+                                            title: getPost.title,
+                                            image: getPost.image,
+                                            eventId: getPost.eventId,
+                                               userId: currUser.email,
+                                               venue: getPost.venue,
+                                               country: getPost.country,
+                                               province: getPost.province,
+                                               dateAndTime: getPost.dateAndTime
+                                            })} >Add</button>}
+                                        
+                                        </div>
+                                    </div></div>}
+                        
+                        
+                    <h1 className='text-center text-[10px]'>Note: This is only a demo. No payment gateway is connected to it yet. So feel free to click on the "Book" button if you want to. It won't bite your money, it's only a demo</h1>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        </div>
             </div>
 
 
-          </div>
-          <hr />
-                {getPost.ticketFrom ===null && 
-                    <div >
-                        <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
-                            <div className='font-bold p-2'>Free event</div>
-                            <div className='font-bold p-2'>${0}</div>
-                            <div className='font-bold p-2 flex items-center'>
-                                <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
-                                    onClick={() => t1 > 1 && setT1(t1 - 1)} /> {t1}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
-                                        onClick={() => setT1(t1 + 1)} /> </div>
-                            <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
-                                ticketLevel: "Free event",
-                                price: 0,
-                                qty: t1,
-                                id: "FREE_EVENT" + Date.now()
-
-                            })} >Add</button></div>
-                        </div></div>}
-              {getPost.ticketLevels.ticket1 && getPost.priceLevels.price1 &&
-              <div >
-                  <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
-                          <div className='font-bold p-2'>{getPost.ticketLevels.ticket1}</div>
-                          <div className='font-bold p-2'>${getPost.priceLevels.price1}</div>
-                          <div className='font-bold p-2 flex items-center'>
-                              <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
-                                  onClick={() =>t1 >1 && setT1(t1 - 1)} /> {t1}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
-                                  onClick={() => setT1(t1 + 1)} /> </div>
-                          <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
-                              ticketLevel: getPost.ticketLevels.ticket1,
-                              price: getPost.priceLevels.price1,
-                              qty: t1,
-                              id:getPost.ticketLevels.ticket1 + Date.now()
-                          
-                      }) } >Add</button></div>
-                  </div></div>}
-
-              {getPost.ticketLevels.ticket2 && getPost.priceLevels.price2 &&
-                  <div >
-                      <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
-                          <div className='font-bold p-2'>{getPost.ticketLevels.ticket2}</div>
-                          <div className='font-bold p-2'>${getPost.priceLevels.price2}</div>
-                          <div className='font-bold p-2 flex items-center'>
-                              <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
-                                  onClick={() => t2 > 1 && setT2(t2 - 1)} /> {t2}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
-                                      onClick={() => setT2(t2 + 1)} /> </div>
-                          <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
-                              ticketLevel: getPost.ticketLevels.ticket2,
-                              price: getPost.priceLevels.price2,
-                              qty: t2,
-                              id: getPost.ticketLevels.ticket2 + Date.now()
-
-                          })} >Add</button></div>
-                      </div></div>}
-              
-
-                {getPost.ticketLevels.ticket3 && getPost.priceLevels.price3 &&
-                    <div >
-                        <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
-                            <div className='font-bold p-2'>{getPost.ticketLevels.ticket3}</div>
-                            <div className='font-bold p-2'>${getPost.priceLevels.price3}</div>
-                            <div className='font-bold p-2 flex items-center'>
-                                <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
-                                    onClick={() => t3 > 1 && setT3(t3 - 1)} /> {t3}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
-                                        onClick={() => setT3(t3 + 1)} /> </div>
-                            <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
-                                ticketLevel: getPost.ticketLevels.ticket3,
-                                price: getPost.priceLevels.price3,
-                                qty: t3,
-                                id: getPost.ticketLevels.ticket3 + Date.now()
-
-                            })} >Add</button></div>
-                        </div></div>}
-
-                {getPost.ticketLevels.ticket1 && getPost.priceLevels.price4 &&
-                    <div >
-                        <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
-                            <div className='font-bold p-2'>{getPost.ticketLevels.ticket4}</div>
-                            <div className='font-bold p-2'>${getPost.priceLevels.price4}</div>
-                            <div className='font-bold p-2 flex items-center'>
-                                <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
-                                    onClick={() => t4 > 1 && setT4(t4 - 1)} /> {t4}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
-                                        onClick={() => setT4(t4 + 1)} /> </div>
-                            <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
-                                ticketLevel: getPost.ticketLevels.ticket4,
-                                price: getPost.priceLevels.price4,
-                                qty: t4,
-                                id: getPost.ticketLevels.ticket4 + Date.now()
-
-                            })} >Add</button></div>
-                        </div></div>}
-
-
-                {getPost.ticketLevels.ticket4 && getPost.priceLevels.price4 &&
-                    <div >
-                        <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
-                            <div className='font-bold p-2'>{getPost.ticketLevels.ticket5}</div>
-                            <div className='font-bold p-2'>${getPost.priceLevels.price5}</div>
-                            <div className='font-bold p-2 flex items-center'>
-                                <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
-                                    onClick={() => t5 > 1 && setT5(t5 - 1)} /> {t5}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
-                                        onClick={() => setT5(t5 + 1)} /> </div>
-                            <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
-                                ticketLevel: getPost.ticketLevels.ticket5,
-                                price: getPost.priceLevels.price5,
-                                qty: t5,
-                                id: getPost.ticketLevels.ticket5 + Date.now()
-
-                            })} >Add</button></div>
-                        </div></div>}
-              </div> :
-              
-              <div className='flex justify-center items-center h-[400px]'>
-                  <ScaleLoader color={color} loading={wait} size={150} className='pt-0"' />
           
-          </div>}
-          
+                <hr />
+              
+           
 
-            </div>
+
+
+
+
+
+        </div>
+         
+         : <div className='flex justify-center items-center h-[400px]'>
+    <ScaleLoader color={color} loading={wait} size={150} className='pt-0"' />
+
+</div>}
+           
+</div >
+
+          
            
   )
 }

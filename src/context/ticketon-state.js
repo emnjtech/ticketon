@@ -39,8 +39,7 @@ const signInWithGoogle = () => {
                 localStorage.setItem('USER_INFORMATION', JSON.stringify(result.user.displayName));
                 window.location.reload(true)
                    
-                })
-              
+                })       
             .catch((error) => {
                 alert(error)
             })
@@ -74,7 +73,6 @@ const signInWithGoogle = () => {
 
 useEffect(() => {
         localStorage.setItem(storageKey, JSON.stringify(state));
-        
     }, [state]);
 
     const totalQty = state.book?.reduce((totalQty, item) => {

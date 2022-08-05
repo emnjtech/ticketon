@@ -1,15 +1,15 @@
-import React from 'react'
+
 import { useContext } from 'react';
-import { Navigate } from 'react-router-dom'
-import CommerceContext from "./context/commerce-context";
+import { useNavigate } from 'react-router-dom'
+import TicketContext from "./context/ticketon-context";
 
 
 
 export default function ProtectedRoute({ children }) {
-    const { currUser } = useContext(CommerceContext)
-
+    const { currUser } = useContext(TicketContext)
+const navigate = useNavigate()
     if (!currUser) {
-        return <Navigate to="/" />
+        return navigate(-1)
     }
     return children
 }

@@ -9,6 +9,20 @@ export default function NewHome() {
     const [post, setPost] = useState(null)
     const [wait, setWait] = useState(false)
     let [color, setColor] = useState("purple");
+const [currentCountry,  setCurrentCountry] = useState("")
+  
+    useEffect(() => {
+        
+        const getLocation =() => {
+           axios.post('https://countriesnow.space/api/v0.1/countries/positions',{name:'Nigeria'})
+                .then((response) => {
+                setCurrentCountry(response.data)
+            })
+        }
+        getLocation()
+    }, [])
+    
+    console.log(currentCountry)
 
     const baseUrl = "http://localhost:3003/allEvents"
 

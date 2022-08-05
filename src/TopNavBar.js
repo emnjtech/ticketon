@@ -53,7 +53,7 @@ const navigate = useNavigate()
                     <div className='hidden md:flex pr-4'>
                         <ul className='hidden md:flex justify-between text-[16px] text-white'>
                             <Link to="/searchResults" ><li className=' hover:text-slate-400 pr-8'>Search events</li></Link>
-                            <Link to="/sneakersShop"><li className=' hover:text-slate-400'>Re-print ticket</li></Link>
+                            <Link to="/reprintTicket"><li className=' hover:text-slate-400'>Re-print ticket</li></Link>
                             <Link to="/allLeatherShoes"><li className=' hover:text-slate-400 pl-8'>About Us</li></Link>
 
 
@@ -71,10 +71,10 @@ const navigate = useNavigate()
 
 
                             <h1 className='font-bold p-2 text-xs text-center'>{userInfo}</h1>
-                            <Link to="/myOrder"> <button className=' bg-transparent p-0 w-full text-black'>
+                            <Link to="/myBookings"> <button className=' bg-transparent p-0 w-full text-black'>
                                 <h1 className='font-bold p-2  text-xs text-center'>MY BOOKINGS</h1>
                             </button></Link><hr />
-                            <Link to="/Checkout"> <button className=' bg-transparent p-0 w-full text-black'>
+                            <Link to="/reprintTicket"> <button className=' bg-transparent p-0 w-full text-black'>
                                 <h1 className='font-bold p-2  text-xs text-center'>MY TICKETS</h1>
                             </button></Link><hr />
                             <button onClick={logout} className=' bg-transparent p-0 w-full text-black'>
@@ -98,9 +98,9 @@ const navigate = useNavigate()
                 {/* Mobile menu items   */}
                 <ul className={!nav ? 'hidden' : 'tilt-in-top-1 absolute z-30 bg-[#C25DC4] w-[60%]rounded-xl px-8 text-center right-[0%] rounded-b-full text-white md:hidden '}>
                     <Link to="/" ><li>Home</li></Link>
-                    <Link to="/sneakersShop"><li>Search events</li></Link>
-                    <Link to="/allLeatherShoes"><li>Re-print ticket</li></Link>
-                    <Link to="/kingsCollections"><li>About us</li></Link>
+                    <Link to="/searchResults"><li>Search events</li></Link>
+                    <Link to="/reprintTicket"><li>Re-print ticket</li></Link>
+                    <Link to="/aboutDeveloper"><li>About Developer</li></Link>
 
                     <div className='flex flex-col mb-4'>
 
@@ -111,10 +111,10 @@ const navigate = useNavigate()
                                 <hr className=' bg-white'/>
 
                                 <h1 className='font-bold p-2 text-xs text-center text-pink-100'>{userInfo}</h1>
-                                <Link to="/myOrder"> <button className=' bg-transparent p-0 w-full text-black'>
+                                <Link to="/myBookings"> <button className=' bg-transparent p-0 w-full text-black'>
                                     <h1 className='font-bold p-2 text-xs text-center'>MY BOOKINGS</h1>
                                 </button></Link><hr />
-                                <Link to="/Checkout"> <button className=' bg-transparent p-0 w-full text-black'>
+                                <Link to="/reprintTicket"> <button className=' bg-transparent p-0 w-full text-black'>
                                     <h1 className='font-bold p-2  text-xs text-center'>MY TICKETS</h1>
                                 </button></Link><hr />
                                 <button onClick={logout} className=' bg-transparent p-0 w-full text-black'>

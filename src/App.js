@@ -13,7 +13,12 @@ import GenerateReceipt from './generateReceipt'
 import ReprintTicket from './reprintTicket'
 import MyBookings from './MyBookings'
 import Footer from './Footer'
-
+import HealthAndWellness from './HealthAndWellness'
+import Music from './music'
+import Picknics from './Picknics'
+import Food from './Food'
+import Religion from './Religion'
+import Seminars from './Seminars'
 
 function ErrorHandler({ error }) {
   return (
@@ -84,6 +89,45 @@ export default function App() {
           <Route path="myBookings" element={
             <><TopNavBar />
               <MyBookings />
+              <Footer />
+            </>
+          } />
+
+          <Route path="healthAndWellness" element={
+            <><TopNavBar />
+              <HealthAndWellness />
+              <Footer />
+            </>
+          } />
+          <Route path="musicConcertsFestivals" element={
+            <><TopNavBar />
+              <Music />
+              <Footer />
+            </>
+          } />
+
+          <Route path="Picknics" element={
+            <><TopNavBar />
+              <Picknics/>
+              <Footer />
+            </>
+          } />
+          <Route path="foodAndBeverages" element={
+            <><TopNavBar />
+            <Food />
+              <Footer />
+            </>
+          } />
+          <Route path="religion" element={
+            <><TopNavBar />
+            <Religion />
+              <Footer />
+            </>
+          } />
+
+          <Route path="seminars" element={
+            <><TopNavBar />
+             <Seminars/>
               <Footer />
             </>
           } />

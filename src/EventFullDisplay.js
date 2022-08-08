@@ -8,6 +8,21 @@ import TicketonContext from './context/ticketon-context';
 import { toast, ToastContainer } from 'react-toastify';
 import RotateLoader from "react-spinners/RotateLoader";
 
+import {
+    EmailShareButton,
+    FacebookShareButton,
+    TelegramShareButton,
+    TwitterShareButton,
+    WhatsappShareButton,
+} from "react-share";
+
+import {
+    FacebookIcon,
+    TwitterIcon,
+    TelegramIcon,
+    WhatsappIcon,
+    EmailIcon,
+} from "react-share";
 
 
 export default function EventFullDisplay() {
@@ -26,7 +41,12 @@ export default function EventFullDisplay() {
     const [t5, setT5] = useState(1)
     const [loading2, setLoading2] = useState(false)
     const [errorMessage, setErrorMessage] = useState([])
+    const [shareDiv, setShareDiv] = useState(false)
 
+
+    const popShareDiv = () => {
+        setShareDiv(!shareDiv)
+    }
     console.log(bookBasket)
 
    
@@ -103,6 +123,11 @@ export default function EventFullDisplay() {
     }
 
     const getPost = post?.find((item) => item.eventId === eventId);
+    const newDate = new Date(getPost?.dateAndTime)
+    const eventDate = newDate?.toLocaleString('en-US', { hour12: true, dateStyle: 'full', timeStyle: "full" })
+    
+   // const newDate = getPost.dateAndTime
+    console.log(newDate.toLocaleString('en-US', { hour12: true, dateStyle: 'full', timeStyle:"full" }))
     return (
        
       <div className='container w-[90%] mx-auto'>
@@ -110,7 +135,7 @@ export default function EventFullDisplay() {
             <ToastContainer />
 
 
-         { post? 
+         { getPost && post? 
          <div>
             <div className='md:flex justify-between pt-5' >
               <div className=" md:w-[40%] w-full ">
@@ -124,7 +149,7 @@ export default function EventFullDisplay() {
                         
                               <div className='flex items-center mb-3'>
                               <div className='w-6'><Icon icon="ic:baseline-event-available" className='text-xl mx-3' /></div>
-                              <div className='w-full mx-4'>   <h1 className='text-lg font-bold'>{getPost.title}</h1></div>
+                              <div className='w-full mx-4'>   <h1 className='text-lg font-bold'>{getPost.title.toUpperCase()}</h1></div>
                               </div>
                               <div className='flex items-center mb-3'>
                               <div className='w-6'><Icon icon="carbon:location-filled" className='text-lg mx-3' /></div>
@@ -148,14 +173,68 @@ export default function EventFullDisplay() {
                           
                               <div className='flex items-center mb-3'>
                               <div className='w-6'><Icon icon="healthicons:i-schedule-school-date-time-outline" className='text-xl mx-2' /></div>
-                              <div className='w-full mx-4'><h1 className='text-[10px] '>{getPost.dateAndTime.toString()}</h1></div>
+                                        <div className='w-full mx-4'><h1 className='text-[10px] '>{eventDate}</h1></div>
                             </div>
                             
                             <div className='flex items-center mb-3'>
                                 <div className='w-6'><h1 className='text-[10px] '>Enquiry:</h1></div>
                                 <div className='w-full mx-4'><h1 className='text-[10px] '>{getPost.createdBy}</h1></div>
                             </div>
+                                    <div className='flex items-center justify-between'>
+                                        <Icon icon="entypo:share" className='text-2xl cursor-pointer' onClick={popShareDiv} />
+                                        <div className={!shareDiv ? 'hidden' : 'p-4 w-full rounded-br-full h-[100px] flex justify-center items-center shadow-xl slide-in-blurred-left'}>
+                                            <FacebookShareButton
+                                                url={`http://localhost:3000/eventSummary/${getPost.eventId}`}
+                                                quote={`You are invited to this  ${ getPost.title } Click to your tickets now`}
+                                                hashtag="#event">
 
+
+                                                <FacebookIcon size={35} round={true} logoFillColor="white" className="p-1 hover:text-slate-400" />
+                                            </FacebookShareButton>
+
+                                            <TwitterShareButton
+                                                url={`http://localhost:3000/eventSummary/${getPost.eventId}`}
+                                                quote={"hello"}
+                                                hashtag="#programing joke">
+
+
+
+                                                <TwitterIcon size={35} round={true} logoFillColor="white" className="p-1" />
+                                            </TwitterShareButton>
+
+                                            <WhatsappShareButton
+                                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                                quote={"hello"}
+                                                hashtag="#programing joke">
+
+
+
+                                                <WhatsappIcon size={35} round={true} logoFillColor="white" className="p-1" />
+                                            </WhatsappShareButton>
+
+                                            <TelegramShareButton
+                                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                                quote={"hello"}
+                                                hashtag="#programing joke">
+
+
+
+                                                <TelegramIcon size={35} round={true} logoFillColor="white" className="p-1" />
+                                            </TelegramShareButton>
+
+                                            <EmailShareButton
+                                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                                quote={"hello"}
+                                                hashtag="#programing joke">
+
+
+
+                                                <EmailIcon size={35} round={true} logoFillColor="white" className="p-1" />
+                                            </EmailShareButton>
+                                        </div>
+
+                                       
+                                    </div>
 
                       </div>
                       
@@ -223,7 +302,7 @@ export default function EventFullDisplay() {
                                         <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
                                             onClick={() => t1 > 1 && setT1(t1 - 1)} /> {t1}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
                                                 onClick={() => setT1(t1 + 1)} /> </div>
-                                    <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                   {currUser && <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
                                         ticketLevel: "Free event",
                                         pricePerTicket: 0,
                                         qty: t1,
@@ -238,7 +317,7 @@ export default function EventFullDisplay() {
                                         dateAndTime:getPost.dateAndTime
 
                                     })} >Add</button>
-                                    </div>
+                                    </div>}
                                     </div></div>}
                         
                             {getPost.ticketLevels.ticket1 && getPost.priceLevels.price1 &&
@@ -250,7 +329,7 @@ export default function EventFullDisplay() {
                                             <Icon icon="bi:arrow-down-circle-fill" className='text-3xl p-1 text-[#C25DC4]   cursor-pointer hover:text-gray-500'
                                                 onClick={() => t1 > 1 && setT1(t1 - 1)} /> {t1}<Icon className='text-3xl p-1 text-[#C25DC4] cursor-pointer hover:text-gray-500' icon="bi:arrow-up-circle-fill"
                                                     onClick={() => setT1(t1 + 1)} /> </div>
-                                        <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
+                                        {currUser && <div className='font-bold p-2'><button className='px-5 py-2 text-sm bg-[#C25DC4] rounded-full' onClick={() => handleBook({
                                             ticketLevel: getPost.ticketLevels.ticket1,
                                             pricePerTicket: getPost.priceLevels.price1,
                                             qty: t1,
@@ -266,7 +345,7 @@ export default function EventFullDisplay() {
 
 
                                         })} >Add</button>
-                                        </div>
+                                        </div>}
                                     </div></div>}
 
                             {getPost.ticketLevels.ticket2 && getPost.priceLevels.price2 &&
@@ -393,7 +472,7 @@ export default function EventFullDisplay() {
                                     </div></div>}
                         
                         
-                    <h1 className='text-center text-[10px]'>Note: This is only a demo. No payment gateway is connected to it yet. So feel free to click on the "Book" button if you want to. It won't bite your money, it's only a demo</h1>
+                    <h1 className='text-center text-[12px]'>Note: This is only a demo. No payment gateway is connected to it yet. So feel free to click on the "Book" button if you want to. It won't bite your money, again, it's only a demo</h1>
                         
                         
                         

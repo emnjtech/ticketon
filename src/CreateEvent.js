@@ -126,11 +126,14 @@ console.log(currUser.email)
     const handleShowTicketLeveles = () => {
         setShowTicketLevels(!showTicketLevels)
     }
-    var today = new Date();
-    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+   // var today = new Date();
+   // var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    
+   // var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+        
+       //     var newDate = eventDateTime?.getFullYear() + '-' + (eventDateTime?.getMonth() + 1) + '-' + eventDateTime?.getDate() + '|' + eventDateTime.getHours() + ":" + eventDateTime.getMinutes();
+     console.log(eventDateTime)
 
     const eventId = title ? title.replace(/[^a-zA-Z0-9]/g, "_") + Date.now() : ""
 
@@ -279,6 +282,7 @@ console.log(currUser.email)
                                       value={eventDateTime}
                                       onChange={(newValue) => {
                                           setEventDateTime(newValue);
+
                                       }}
                                       minDate={new Date(Date.now())}
                                      // minTime={new Date(Date.now())}
@@ -454,7 +458,7 @@ console.log(currUser.email)
                                       </div>
                                       <div className='flex items-center mb-3'>
                                           <div><Icon icon="healthicons:i-schedule-school-date-time-outline" className='text-lg mx-3' /></div>
-                                          <div><h1 className='text-[10px] '>{JSON.stringify(previewObj.dateAndTime)}</h1></div>
+                                          <div><h1 className='text-[10px] '>{previewObj.dateAndTime.toString()}</h1></div>
                                       </div>
 
 

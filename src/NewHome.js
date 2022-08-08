@@ -9,16 +9,23 @@ export default function NewHome() {
     const [post, setPost] = useState(null)
     const [wait, setWait] = useState(false)
     let [color, setColor] = useState("purple");
-const [currentCountry,  setCurrentCountry] = useState("")
+    const [currentCountry, setCurrentCountry] = useState("")
   
+
     useEffect(() => {
         
-        const getLocation =() => {
+        const getLocation = () => {
+            try {
            axios.post('https://countriesnow.space/api/v0.1/countries/positions',{name:'Nigeria'})
                 .then((response) => {
                 setCurrentCountry(response.data)
             })
-        }
+            }
+            catch (error) {
+                console.log(error)
+            }
+        } 
+       
         getLocation()
     }, [])
     
@@ -28,6 +35,9 @@ const [currentCountry,  setCurrentCountry] = useState("")
 
     useEffect(() => {
         const getPost = async () => {
+            try {
+                
+           
             setWait(true)
             await axios.get(baseUrl).then((response) => {
                 setPost(response.data);
@@ -35,11 +45,15 @@ const [currentCountry,  setCurrentCountry] = useState("")
                 setWait(false)
                 setColor('green')
             })
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
         getPost()
     }, []);
     console.log(post)
-
+   
     return (
         <div className='container mx-auto'>
             <h1 className='text-2xl text-center p-4 font-bold'>UPCOMING EVENTS </h1>
@@ -58,13 +72,7 @@ const [currentCountry,  setCurrentCountry] = useState("")
                         dateAndTime={item.dateAndTime}
                         ticketFrom={item.ticketFrom}
                         alt={item.alt}
-                       
-
-
-
-                    /></div>
-
-                    
+                    /></div>   
 
                 ))
 

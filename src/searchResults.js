@@ -3,8 +3,7 @@ import axios from 'axios'
 import { useLocation } from 'react-router-dom'
 import SearchComponent from './SearchComponent.js'
 import img from './assets/undraw_dir2.png'
-
-
+import { Icon } from '@iconify/react';
 export default function SearchResults() {
     const location = useLocation()
   const searchItems = location.state
@@ -22,21 +21,29 @@ export default function SearchResults() {
 
   useEffect(() => {
     const getPost = async () => {
+      try {
+       
      
       await axios.get(baseUrl).then((response) => {
         setPost(response.data);
 
       
       })
+      }
+      catch (error) {
+        console.log(error)
+      }
     }
     getPost()
   }, []);
   console.log(post)
   console.log(searchItems)
+ 
+  
  const searchData = searchItems? post?.filter((item) => (
     item.title.toLowerCase().includes(searchItems.title.toLowerCase())
-   && item.country.toLowerCase().includes(searchItems.country.toLowerCase())
-   && item.province.toLowerCase().includes(searchItems.province.toLowerCase())
+   || item.country.toLowerCase().includes(searchItems.country.toLowerCase())
+   || item.province.toLowerCase().includes(searchItems.province.toLowerCase())
   )) : ""
   console.log(searchData)
 
@@ -51,7 +58,7 @@ export default function SearchResults() {
     else {
       
    
-    let matches = post.filter((events) => {
+    let matches = post?.filter((events) => {
       const regex = new RegExp(`${text}`, "gi")
       return (events.title.match(regex) || events.venue.match(regex) || events.Artiste.match(regex) || events.country.match(regex)
         || events.province.match(regex) || events.town.match(regex) ) || events.category.match(regex)
@@ -67,13 +74,16 @@ export default function SearchResults() {
 }
 
   return (
-    <div className='container mx-auto'>
+    <div className='container mx-auto p-4'>
       <h1 className='text-sm text-center p-4 font-bold'>Search events by title, venue, Perfoming Artistes/Speakers, country or category</h1>
-      <div className='md:flex justify-center align-center'>
-        
-        <div className='w-full p-4'>
+      <div className='flex justify-center align-center   bg-gradient-to-r from-pink-100'>
+        <div className='flex justify-center p-4'>
+
+          <Icon icon="ic:outline-screen-search-desktop" className='text-3xl' />
+        </div>
+        <div className='w-full p-2'>
           <input type='text' placeholder='Search event by title, performing Artistes, country, state or venue' className='h-[50px] w-full 
-          bg-gradient-to-r from-pink-100 p-4 text-sm outline-none shadow-2xl'
+         bg-transparent p-4 text-sm outline-none '
             onChange={handleChange}
             value={searchText}
 
@@ -81,7 +91,7 @@ export default function SearchResults() {
 
           {searchMatch && searchMatch.map((item)=> (
             <div className=' flex justify-start align-center p-4 h-[90px] border-b-2  cursor-pointer hover:bg-gradient-to-r shadow-xl hover:from-purple-300  bg-gradient-to-r from-purple-200 rounded-br-full'
-              onClick={() => { setSearchText(item.title);  setSearchId(item.eventId)}}>
+              onClick={() => { setSearchText(item.title); setSearchId(item.eventId); setSearchMatch([]) }}>
               <div className=' w-[350px]'> <h1 className='text-[10px] font-bold'>{item.title}</h1>
                 <h1 className='text-[9px]'>{item.Artiste}</h1>
                 <h1 className='text-[9px]'>{item.country} | {item.province}</h1>
@@ -99,17 +109,31 @@ export default function SearchResults() {
        
         </div>
 
-        <div className='p-4'> 
-
-          <button className='px-6 py-3 w-full'>Search</button>
-        </div>
+        
       </div>
 
       <div>
-        {!searchMatch[0] && !mainSearch && <div className='mx-auto w-[40%]'>
-          <h1 className='text-center'>No search results</h1>
+        {!searchData && !mainSearch && <div className='mx-auto w-[40%]'>
+          
           <img src={img} alt="search" width={500} /></div>}
         <div className='grid md:grid-cols-3 gap-4 w-[90%] mx-auto p-5'>
+
+          {mainSearch && <div>
+            <SearchComponent
+              key={mainSearch.eventId}
+              eventId={mainSearch.eventId}
+              image={mainSearch.image}
+              artiste={mainSearch.Artiste}
+              title={mainSearch.title}
+              province={mainSearch.province}
+              country={mainSearch.country}
+              venue={mainSearch.venue}
+              town={mainSearch.town}
+              dateAndTime={mainSearch.dateAndTime}
+              ticketFrom={mainSearch.ticketFrom}
+              alt={mainSearch.alt} />
+
+          </div>}
         {searchData && searchData.map(item => (<div> 
         <SearchComponent
             key={item.eventId}
@@ -127,22 +151,7 @@ export default function SearchResults() {
 
         </div>))}
       
-        {mainSearch && <div>
-          <SearchComponent
-            key={mainSearch.eventId}
-            eventId={mainSearch.eventId}
-            image={mainSearch.image}
-            artiste={mainSearch.Artiste}
-            title={mainSearch.title}
-            province={mainSearch.province}
-            country={mainSearch.country}
-            venue={mainSearch.venue}
-            town={mainSearch.town}
-            dateAndTime={mainSearch.dateAndTime}
-            ticketFrom={mainSearch.ticketFrom}
-            alt={mainSearch.alt} />
-
-        </div>}
+      
 
       </div>
 

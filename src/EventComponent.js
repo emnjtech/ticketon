@@ -1,11 +1,56 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
+import {
+    EmailShareButton,
+    FacebookShareButton,
+    TelegramShareButton,
+    TwitterShareButton,
+    WhatsappShareButton,
+} from "react-share";
+
+import {
+    FacebookIcon,
+    TwitterIcon,
+    TelegramIcon,
+    WhatsappIcon,
+    EmailIcon,
+} from 'react-share';
+
+export default function EventComponent({ title, eventId, image, artiste, dateAndTime, town, province, country, ticketFrom, venue }) {
+    const [shareDiv, setShareDiv] = useState(false)
+    const [HideComponent,setHideComponent] = useState(false)
+
+    useEffect(() => {
+        var g1 = new Date(dateAndTime);
+        var g2 = new Date();
+
+        if (g1?.getTime() === g2.getTime())
+           
+            {
+            setHideComponent(!HideComponent)
+      
+    }
+        else
+        {
+            console.log("Not equal");
+        }
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[])
+   
+
+    const popShareDiv = () => {
+        setShareDiv(!shareDiv)
+    }
+
+    const newDate = new Date(dateAndTime)
+    const eventDate = newDate?.toLocaleString('en-US', { hour12: true, dateStyle: 'full', timeStyle: "full" })
 
 
-export default function EventComponent({title,eventId, image,artiste,dateAndTime,town,province,country,ticketFrom,venue}) {
     return (
-        <div className=" bg-white  ">
+    <div>
+       {!HideComponent && <div className=" bg-white  ">
             {/*"   <!-- div with ribbon -->"*/}
 
             <div className="relative border w-[90%] mx-auto  overflow-hidden shadow-2xl rounded-2xl transition ease-in-out delay-300 hover:-translate-y-3 hover:scale-x-95 duration-300  ">
@@ -37,12 +82,63 @@ export default function EventComponent({title,eventId, image,artiste,dateAndTime
 
                     <div className='flex  justify-between items-center mb-3 w-full'>
                         <div className='w-6'><Icon icon="healthicons:i-schedule-school-date-time-outline" className='text-lg mx-3' /></div>
-                        <div className='w-full mx-4'><h1 className='text-[10px] '>{dateAndTime}</h1></div>
+                        <div className='w-full mx-4'><h1 className='text-[10px] '>{eventDate}</h1></div>
                     </div>
 
                     <div className='flex items-center justify-between'>
-                        <Icon icon="fa:share-square-o" className='text-2xl' />
-                       <Link to="eventSummary"> <button className='flex items-center justify-between px-4 py-2 rounded-full bg-[#C25DC4]'><Icon icon="material-symbols:event-available-rounded" className='text-2xl p-1 ' />
+                        <Icon icon="entypo:share" className='text-2xl cursor-pointer' onClick={popShareDiv}/>
+                        <div className={!shareDiv ? 'hidden' : 'p-4 w-[50%] rounded-br-full h-[100px] grid grid-cols-3 shadow-xl roll-in-blurred-left'}>
+                            <FacebookShareButton
+                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                quote={"You are invited to this" + {title} + "Click to your tickets now"}
+                                hashtag="#event">
+                               
+
+                                <FacebookIcon size={30} round={true} logoFillColor="white" className="p-1 hover:text-slate-400" />
+                            </FacebookShareButton>
+
+                            <TwitterShareButton
+                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                quote={"hello"}
+                                hashtag="#programing joke">
+                               
+
+
+                                <TwitterIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                            </TwitterShareButton>
+
+                            <WhatsappShareButton
+                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                quote={"hello"}
+                                hashtag="#programing joke">
+
+
+
+                                <WhatsappIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                            </WhatsappShareButton>
+
+                            <TelegramShareButton
+                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                quote={"hello"}
+                                hashtag="#programing joke">
+
+
+
+                                <TelegramIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                            </TelegramShareButton>
+
+                            <EmailShareButton
+                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                quote={"hello"}
+                                hashtag="#programing joke">
+
+
+
+                                <EmailIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                            </EmailShareButton>
+                        </div>
+
+                       <Link to={`/eventSummary/${eventId}`}> <button className='flex items-center justify-between px-4 py-2 rounded-full bg-[#C25DC4]'><Icon icon="material-symbols:event-available-rounded" className='text-2xl p-1 ' />
                             <h1 className='text-[12px]'>Get Info</h1></button></Link>  
 
                     </div>
@@ -67,7 +163,7 @@ export default function EventComponent({title,eventId, image,artiste,dateAndTime
 
             {/*" <!-- end div with ribbon -->"*/}
         </div>
-
-
+}
+        </div>
     )
 }

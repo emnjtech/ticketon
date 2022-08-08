@@ -4,7 +4,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 import TicketonContext from './context/ticketon-context.js';
 import ProtectedRoute from './ProtectedRoute'
 import TicketSearchComponent from './TicketSearchComponent.js';
-
+import { Icon } from '@iconify/react';
 
 export default function ReprintTicket() {
   
@@ -13,9 +13,7 @@ export default function ReprintTicket() {
     const [post, setPost] = useState(null)
     const [wait, setWait] = useState(false)
     let [color, setColor] = useState("#C25DC4");
-
-   
-    const {currUser} = useContext(TicketonContext)
+    const { currUser, signInWithGoogle, } = useContext(TicketonContext)
 
 
 
@@ -43,8 +41,18 @@ export default function ReprintTicket() {
    
 
     return (
-        <ProtectedRoute>
-        <div className='container mx-auto'>
+            <div className='container mx-auto'>
+                
+                <div className=" md:w-[50%] w-full my-5">
+                    <div className='w-full my-4 shadow-2xl'>
+                        {!currUser &&
+                            <div className='mx-auto w-full h-[200px] my-auto px-10'>
+                                <h1 className='text-center p-6'>Please Login to select tickets</h1>
+                                <button onClick={signInWithGoogle} className="flex justify-center item-center p-2 w-full my-auto bg-black"  ><Icon icon="flat-color-icons:google" className='text-[40px]' />
+                                    <h1 className='p-2 text-lg font-bold'>Sign In With Google</h1></button>
+                            </div>}
+                    </div></div>
+                
 
                 <div className='flex justify-center align-center'>
                     <div className='p-5'> <MoonLoader loading={wait} color={color} width={100} /></div> 
@@ -86,7 +94,6 @@ export default function ReprintTicket() {
 
 
         </div>
-        </ProtectedRoute>
     )
 }
  //: <div className='flex justify-center items-center h-[300px]'> <ClockLoader color={color} loading={wait} size={80} className='pt-0"' /></div>

@@ -3,7 +3,7 @@ import bg from './assets/bg2.jpg'
 import { Icon } from '@iconify/react';
 import axios from 'axios'
 import { Hint } from 'react-autocomplete-hint';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -48,6 +48,30 @@ const navigate = useNavigate()
     const handleSearch = () => {
     navigate('/searchResults',{state: {title:searchTitle.toLowerCase(), province: searchProvince.toLowerCase(), country: searchCountry.toLowerCase()}})
 }
+
+    const handleHealth= () => {
+        navigate('/healthAndWellness', { state: 'Health & Wellness' })
+    }
+
+    const handleMusic= () => {
+        navigate('/musicConcertsFestivals', { state: 'Music Concerts & Festivals' })
+    }
+
+    const handleOutdoor = () => {
+        navigate('/Picknics', { state: 'Outdoor & Picknick' })
+    }
+
+    const handleFood = () => {
+        navigate('/foodAndBeverages', { state: 'Food & Beverages' })
+    }
+
+    const handleSeminars = () => {
+        navigate('/seminars', { state:     'Seminars & Workshops' })
+    }
+
+    const handleReligion = () => {
+        navigate('/religion', { state: 'Religion & Spiritual' })
+    }
 
 
 
@@ -101,40 +125,40 @@ const navigate = useNavigate()
             <div className='absolute w-[90%] m-auto bottom-0 md:top-[500px]  top-[500px] left-0 right-0 h-[100px]'>
                 <div className='grid md:grid-cols-6 grid-cols-3 gap-x-[100px] p-3 text-white  '>
                     <div >
-                        <Link to="/searchResults">
-                        <div className='flex items-center justify-center' > <Icon icon="ph:projector-screen-light" className='text-7xl px-2 text-white' /></div>
+                        
+                        <div className='flex items-center justify-center cursor-pointer' onClick={ handleSeminars} > <Icon icon="ph:projector-screen-light" className='text-7xl px-2 text-white' /></div>
                             <h1 className='md:text-[11px] text-[8px]  text-center'>SEMINARS & WORKSHOPS</h1>
-                        </Link>
+                        
                     </div>
                     <div >
-                         <Link to="/searchResults">
-                        <div className='flex items-center justify-center' > <Icon icon="la:guitar" className='text-7xl  px-2 text-white' /></div>
+                       
+                        <div className='flex items-center justify-center cursor-pointer' onClick={handleMusic}> <Icon icon="la:guitar" className='text-7xl  px-2 text-white' /></div>
                         <h1 className='md:text-[11px] text-[8px]  text-center'>MUSIC CONCERTS & FESTIVALS</h1>
-                        </Link>
+                       
                     </div>
                     <div >
-                        <Link to="/searchResults">
-                        <div className='flex items-center justify-center' > <Icon icon="dashicons:food" className='text-7xl  px-2 text-white' /></div>
+                        
+                        <div className='flex items-center justify-center cursor-pointer' onClick={handleFood}> <Icon icon="dashicons:food" className='text-7xl  px-2 text-white' /></div>
                             <h1 className='md:text-[11px] text-[8px]  text-center'>FOOD & BEVERAGES</h1>
-                        </Link>
+                      
                     </div>
                     <div >
-                        <Link to="/searchResults">
-                        <div className='flex items-center justify-center' > <Icon icon="bi:house-heart" className='text-7xl  px-2 text-white' /></div>
+                    
+                        <div className='flex items-center justify-center cursor-pointer' onClick={handleReligion} > <Icon icon="bi:house-heart" className='text-7xl  px-2 text-white' /></div>
                             <h1 className='md:text-[11px] text-[8px]  text-center'>RELIGION & SPIRITUAL</h1>
-                        </Link>
+                       
                     </div>
                     <div >
-                        <Link to="/searchResults">
-                        <div className='flex items-center justify-center' > <Icon icon="fontisto:cocktail" className='text-7xl  px-2 text-white' /></div>
+                      
+                        <div className='flex items-center justify-center cursor-pointer' onClick={handleOutdoor}> <Icon icon="fontisto:cocktail" className='text-7xl  px-2 text-white' /></div>
                             <h1 className='md:text-[11px] text-[8px]  text-center'>OUTDOOR & PICNICK</h1>
-                        </Link>
+                       
                     </div>
                     <div >
-                        <Link to="/searchResults">
-                        <div className='flex items-center justify-center' > <Icon icon="ic:outline-sports-gymnastics" className='text-7xl  px-2 text-white' /></div>
+                        
+                        <div className='flex items-center justify-center cursor-pointer' onClick={handleHealth}> <Icon icon="ic:outline-sports-gymnastics" className='text-7xl  px-2 text-white' /></div>
                             <h1 className='md:text-[11px] text-[8px]  text-center'>HEALTH & WELLNESS</h1>
-                        </Link>
+                        
                     </div>
                 </div>
 
@@ -143,4 +167,3 @@ const navigate = useNavigate()
         </div>
     )
 }
-const options = ['Option 1', 'Option 2','option 3','option 4'];

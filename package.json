@@ -28,6 +28,8 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.4.0",
+    "react-share": "^4.4.0",
+    "react-share-social": "^0.1.48",
     "react-spinners": "^0.13.3",
     "react-to-pdf": "^0.0.14",
     "react-toastify": "^9.0.7",

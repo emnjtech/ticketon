@@ -54,7 +54,7 @@ const navigate = useNavigate()
                         <ul className='hidden md:flex justify-between text-[16px] text-white'>
                             <Link to="/searchResults" ><li className=' hover:text-slate-400 pr-8'>Search events</li></Link>
                             <Link to="/reprintTicket"><li className=' hover:text-slate-400'>Re-print ticket</li></Link>
-                            <Link to="/allLeatherShoes"><li className=' hover:text-slate-400 pl-8'>About Us</li></Link>
+                            <a href="https://emnj.tech"><li className=' hover:text-slate-400 pl-8'>About Us</li></a>
 
 
                         </ul>

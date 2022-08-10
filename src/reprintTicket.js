@@ -2,9 +2,9 @@ import React, { useState, useEffect,useContext } from 'react'
 import axios from 'axios'
 import MoonLoader from "react-spinners/MoonLoader";
 import TicketonContext from './context/ticketon-context.js';
-import ProtectedRoute from './ProtectedRoute'
 import TicketSearchComponent from './TicketSearchComponent.js';
 import { Icon } from '@iconify/react';
+
 
 export default function ReprintTicket() {
   
@@ -17,7 +17,7 @@ export default function ReprintTicket() {
 
 
 
-    const baseUrl = "http://localhost:3003/tickets"
+    const baseUrl = "https://ticketon-node-server.herokuapp.com/tickets"
 
     useEffect(() => {
         const getPost = async () => {
@@ -32,15 +32,18 @@ export default function ReprintTicket() {
         getPost()
     }, []);
     console.log(post)
-
+    const newPost = post?.sort(item => item.dateBooked = -1)
+    console.log(newPost)
     const ticketsFilter =post?.filter((item) => item.userId === currUser.email.toLowerCase())
-    console.log (ticketsFilter)
+    console.log(ticketsFilter)
+    
 
 
 
    
 
     return (
+        
             <div className='container mx-auto'>
                 
                 <div className=" md:w-[50%] w-full my-5">
@@ -93,7 +96,8 @@ export default function ReprintTicket() {
             </div>
 
 
-        </div>
+            </div>
+       
     )
 }
  //: <div className='flex justify-center items-center h-[300px]'> <ClockLoader color={color} loading={wait} size={80} className='pt-0"' /></div>

@@ -13,9 +13,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse'
 import { Icon } from '@iconify/react';
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import TicketonContext from './context/ticketon-context';
-
+import { ToastContainer, toast } from 'react-toastify'
+import ProtectedRouteToSignIn from './ProtectedRouteToSignIn';
 
 export default function CreateEvent() {
     let [color, setColor] = useState("yellow");
@@ -34,8 +35,10 @@ export default function CreateEvent() {
     const [errorMessage,setErrorMessage] = useState("")
     const [countryList, setCountryList] = useState([])
     const [stateList, setStateList] = useState("")
+    const [idSet, setIdSet] = useState("")
     const { currUser } = useContext(TicketonContext)
-    const navigate = useNavigate()
+   
+ 
 
 
     const getData = async () => {
@@ -91,14 +94,22 @@ export default function CreateEvent() {
     console.log(stateList? stateList.data.states.map(item => item.name): "")
   console.log(countryList.data)
     
-      //  console.log(stateList? stateList:"")
+  
 
     const uploadImage = async (e) => {
         const file = e.target.files[0];
+        const fileSize = e.target.files[0].size;
+        const fileMb = fileSize / 1024 ** 2;
+        console.log(fileMb)
+        if (fileMb > 3) {
+            toast ("File too large. Max size = 3mb")
+            return
+
+        }else{
 
         const base64 = await convertBase64(file);
         setBaseImage(base64);
-
+        }
     };
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -114,7 +125,7 @@ export default function CreateEvent() {
             };
         });
     };
-console.log(currUser.email)
+
     const handleChange = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -135,15 +146,26 @@ console.log(currUser.email)
        //     var newDate = eventDateTime?.getFullYear() + '-' + (eventDateTime?.getMonth() + 1) + '-' + eventDateTime?.getDate() + '|' + eventDateTime.getHours() + ":" + eventDateTime.getMinutes();
      console.log(eventDateTime)
 
-    const eventId = title ? title.replace(/[^a-zA-Z0-9]/g, "_") + Date.now() : ""
+    const eventId = title && inputs.artiste && inputs.town ? title.replace(/[^a-zA-Z0-9]/g, "_") + inputs.artiste.replace(/[^a-zA-Z0-9]/g, "_") + inputs.town.replace(/[^a-zA-Z0-9]/g, "_") : ""
+    
 
 
     const handlePreview = (event) => {
         event.preventDefault()
+
+        if (title.trim().length === 0 || inputs.artiste.trim().length === 0 || inputs.description.trim().length === 0 || inputs.venue.trim().length === 0
+            || category.trim().length === 0 || inputs.town.trim().length === 0 || selectedState.trim().length === 0 || selectedCountry.trim().length === 0
+            || eventDateTime.length === 0 || inputs.ticketsRemaining.trim().length === 0 || baseImage.trim().length === 0 )
+        {
+            toast('No field should be left empty');
+            return
+        }
+
+
         const obj = {
             createdBy: currUser.email,
             eventId: eventId,
-            title: title,
+            title: title.toUpperCase(),
             Artiste: inputs.artiste,
             image: baseImage,
             description: inputs.description,
@@ -181,14 +203,14 @@ console.log(currUser.email)
         e.preventDefault();       
         setLoading(true)
        axios
-           .post("http://localhost:3003/createEvent", previewObj)
+           .post("https://ticketon-node-server.herokuapp.com/createEvent", previewObj)
            .then(function (response) {
                
                setLoading(false)
                setColor('white')
                setUploadSuccess(true)
                console.log(response);
-               navigate(`/eventSummary/${eventId}`)
+               setIdSet(eventId)
 
             //   navigate('/eventSummary/:eventId',{state:eventId})
             }).catch(function (errors) {
@@ -232,7 +254,8 @@ console.log(currUser.email)
          uploadPhoto();
      }*/
 
-  return (
+    return (
+        <ProtectedRouteToSignIn>
       <div className='container mx-auto'>
           <div className='p-3 flex justify-center items-center'> {uploadSuccess ? <Stack sx={{ width: '100%', height: '50px' }} spacing={2}>
               <Collapse in={open}>
@@ -250,25 +273,25 @@ console.log(currUser.email)
                           </IconButton>
                       }
 
-                      severity="success">This is a success alert —<Link to={`/eventSummary/${eventId}`}><b> check it out!</b></Link></Alert>
+                      severity="success">Event created successfully —<Link to={`/eventSummary/${idSet}`}><b> check it out!</b></Link></Alert>
               </Collapse>
           </Stack> : ""}</div>
           <div className='md:flex justify-between'>
               <div className=' md:w-[60%] p-4 rounded-3xl'>
                 
-                  
+                  <ToastContainer />
                   <div className='w-full bg-pink-200 p-8'>
                       <form onSubmit={handlePreview} >
                       <label for="fname" className='text-sm'>Event's theme:</label>
-                      <input required type="text"  placeholder="Enter the theme/title of your event"
+                          <input maxLength="25"  type="text"  placeholder="Enter the theme/title of your event"
                               className='w-full text-sm p-3 box-border mb-4 mt-1 rounded-xl'
                               name="title"
-                              value={title || ""}
+                              value={title}
                               onChange={(e) =>setTitle(e.target.value)}
                       />
 
                       <label for="venue" className='text-sm'>Event's venue:</label>
-                      <input required type="text" placeholder="Enter the venue of your event"
+                      <input maxLength="25" type="text" placeholder="Enter the venue of your event"
                               className='w-full text-sm p-3 box-border mb-4 mt-1 rounded-xl'
                               name="venue"
                               value={inputs.venue}
@@ -280,6 +303,7 @@ console.log(currUser.email)
                                       renderInput={(props) => <TextField {...props} />}
                                       //label="DateTimePicker"
                                       value={eventDateTime}
+                                      
                                       onChange={(newValue) => {
                                           setEventDateTime(newValue);
 
@@ -318,7 +342,7 @@ console.log(currUser.email)
                               <input id="file-upload" type="file" onChange={(e) => uploadImage(e)} required />
                               {baseImage ? <img src={baseImage} alt="Upload" className=' w-[170px] h-[200px]' /> : ""}
                           </div>
-                      <p className='text-sm text-slate-600'><i>(Max: 5mb)</i></p>
+                      <p className='text-sm text-slate-600'><i>(Max: 3mb)</i></p>
                       
                       
                       <select value={selectedCountry} onChange={(e) => setSelectedCountry(e.target.value)}
@@ -476,7 +500,9 @@ console.log(currUser.email)
                           </div>
 
 
-
+                                <div className='flex justify-center items-center '>
+                                    {loading && <RotateLoader color={color} loading={loading} size={100} className='pt-0"' />}
+                                   </div> 
 
 
                       </div>
@@ -509,9 +535,7 @@ console.log(currUser.email)
                       </div>
                       <div className='mx-auto'>
                           <button onClick={handleSubmit} className='rounded-full w-full bg-[#C25DC4] px-6 py-3'>
-                              {loading ? <span className='flex justify-center items-center '>
-                                  <RotateLoader color={color} loading={loading} size={10} className='pt-0"' />
-                                  <h1 className='ml-10'>Please wait</h1></span> : "Submit"}</button>
+                             Submit</button>
                           
                       </div>
 
@@ -520,6 +544,7 @@ console.log(currUser.email)
                   </div> : ""}
             </div>
           </div>
-    </div>
+            </div>
+        </ProtectedRouteToSignIn>
   )
 }

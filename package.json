@@ -1,6 +1,7 @@
 {
   "name": "ticket",
   "version": "0.1.0",
+  "homepage": "http://ticketon.emnj.tech",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -33,6 +34,7 @@
     "react-spinners": "^0.13.3",
     "react-to-pdf": "^0.0.14",
     "react-toastify": "^9.0.7",
+    "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

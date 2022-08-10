@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import axios from 'axios'
 import MoonLoader from "react-spinners/MoonLoader";
 import TicketonContext from './context/ticketon-context.js';
@@ -7,44 +7,56 @@ import { Icon } from '@iconify/react';
 
 export default function MyBookings() {
 
-    const { currUser, signInWithGoogle, } = useContext(TicketonContext)
+    const { currUser, } = useContext(TicketonContext)
     const [bookBasket, setBookBasket] = useState([])
-    const [post, setPost] = useState(null)
     const [wait, setWait] = useState(false)
     let [color, setColor] = useState("#C25DC4");
 
 
     const removeBook = (ticketId) => {
-        axios.delete(`http://localhost:3003/deleteSavedTicket/${ticketId}`)
+        axios.delete(`https://ticketon-node-server.herokuapp.com/deleteSavedTicket/${ticketId}`)
             .then((response) => {
             console.log(response.data)
         })
         setBookBasket(bookBasket.filter(item => item.ticketId !== ticketId))
+
     }
 
 const navigate = useNavigate()
 
  
 
-    const baseUrl = "http://localhost:3003/savedEvents"
+    const baseUrl = "https://ticketon-node-server.herokuapp.com/savedEvents"
 
     useEffect(() => {
         const getPost = async () => {
             setWait(true)
             await axios.get(baseUrl).then((response) => {
-                setBookBasket(response.data);
-
+                setBookBasket(response.data.filter(item => item.userId = currUser.email)
+                );
                 setWait(false)
                 setColor('green')
+                
             })
+            
         }
         getPost()
+  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    console.log(bookBasket)
+    const postRef = useRef([])
+    useEffect(() => {
+        if (bookBasket) { postRef.current = bookBasket }
+       
+})
+     console.log(postRef)
+   
+    //const ticketsFilter = post?.filter((item) => item.userId === currUser.email);
 
-    const ticketsFilter = post?.filter((item) => item.userId === currUser.email.toLowerCase())
-    console.log(ticketsFilter)
+    //  const newB = ()=>setBookBasket(ticketsFilter)
 
+
+    
 
     const handleBooking = () => {
         navigate("/generateTicket", { state: bookBasket })
@@ -66,7 +78,7 @@ const navigate = useNavigate()
                
                 </div>
                 <div className='shadow-2xl grid grid-cols-5'>
-                    {bookBasket[0] ? <><h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'>Ticket type</h1>
+                    {bookBasket?.length >=1? <><h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'>Ticket type</h1>
                         <h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'> Price per Ticket </h1>
                         <h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'>quantity</h1>
                         <h1 className='text-[11px] font-bold px-4 py-2 bg-slate-200'>Total </h1>
@@ -81,10 +93,10 @@ const navigate = useNavigate()
                         <h1 className='text-[11px] font-bold p-4'> ${item.pricePerTicket}</h1>
                         <h1 className='text-[11px] font-bold p-4'>{item.qty}</h1>
                         <h1 className='text-[11px] font-bold p-4'>${item.pricePerTicket !== 0 ? item.pricePerTicket * item.qty : "0"}</h1>
-                        <div className='flex justify-center items-center cursor-pointer'  onClick={() => removeBook(item.ticketId)}><Icon icon="carbon:row-delete" className='text-[20px] text-red-500' /><h1 className=' text-[11px] py-4 px-1 text-red-500 text-bold' >Delete ticket</h1></div>
+                        <div className='flex justify-center items-center cursor-pointer'  onClick={() => removeBook(item.ticketId)}><Icon icon="carbon:row-delete" className='text-[20px] text-red-500' /><h1 className=' text-[11px] py-4 px-1 text-red-500 text-bold' >Delete booking</h1></div>
                     </div>))}
 
-                {bookBasket[0] && <div className='mx-auto py-5 flex justify-between'>
+                {bookBasket?.length >= 1 && <div className='mx-auto py-5 flex justify-between'>
                     <button className='px-5 py-3 rounded-none bg-transparent text-amber-700 hover:text-slate-400 border-t-2 hover:bg-transparent hover:border-t-amber-600 flex justify-center items-center rounded-b-full' onClick={handleBooking}><Icon icon="fluent:book-add-20-filled" className='text-[30px] '/>Book Now!</button>
                     
                 </div>}

@@ -21,13 +21,13 @@ export default function Footer() {
         }
     } */
     return (
-        <div className="w-full md:w-full  bg-[#C25DC4] px-3 " >
-            <div className=' md:flex justify-between   px-4 py-4 w-full '>
+        <div className="w-full md:w-full  bg-[#C25DC4] px-7 mt-[200px] py-14" >
+            <div className=' md:flex justify-between   px-4 w-full '>
                 <Slide>
                     <div className=' md:w-[20%] w-full '>
 
-                        <h1 className='text-sm md:text-sm font-bold  px-6 text-slate-300'> MENU </h1>
-                        <ul className='px-4 text-white font-bold text-[11px] '>
+                        <h1 className='text-sm md:text-sm font-bold  text-slate-300'> MENU </h1>
+                        <ul className=' text-white font-bold text-[11px] '>
 
                             
                             <Link to="/Checkout"><li>Search Events</li></Link>
@@ -45,22 +45,22 @@ export default function Footer() {
                   <Slide>
 
                 <div>
-                    <h1 className=' text-center px-4 pt-3 font-bold text-sm text-slate-300'>Connect with Developer</h1>
+                    <h1 className='   font-bold text-sm text-slate-300'>Connect with Developer</h1>
 
-                    <div className='flex md:flex justify-center  '>
-                        <a href="https://github.com/emnjtech/"><FaGithub className='w-9 h-9 m-2' /></a>
-                        <a href="www.linkedin.com/in/themartinzjr"><FaLinkedin className='w-9 h-9 m-2' /> </a>
-                        <a href="https://emnj.tech"><FaTwitter className='w-9 h-9 m-2' /> </a>
+                    <div className='flex md:flex justify-start  '>
+                            <a href="https://github.com/emnjtech/" rel="noreferrer" target="_blank"><FaGithub className='w-9 h-9 m-2' /></a>
+                            <a href="www.linkedin.com/in/themartinzjr" rel="noreferrer" target="_blank"><FaLinkedin className='w-9 h-9 m-2' /> </a>
+                            <a href="https://emnj.tech" rel="noreferrer" target="_blank"><FaTwitter className='w-9 h-9 m-2' /> </a>
 
                     </div>
-                    <h1 className='text-center font-bold text-sm text-white'> <a href="https://emnj.tech" target="_blank" rel="noreferrer">About Developer</a></h1>
+                    <h1 className=' font-bold text-sm text-white'> <a href="https://emnj.tech" target="_blank" rel="noreferrer">About Developer</a></h1>
 
 
                 </div>
                 </Slide>
               
                 <Slide right>
-                    <div className=' md:w-[30%] w-full py-4 px-4'>
+                    <div className=' md:w-[30%] w-full '>
                         <h1 className=' font-bold text-sm text-slate-300'>ADDRESS</h1>
                         <div className='mt-3 flex justify-start items-center'> <FaHome className='text-white w-6 h-6' />
                             <p className='text-white text-[12px] px-2'><b>Head Office:</b> Shop B02 Head Office street. Head Office Building, Lagos, Nigeria</p>

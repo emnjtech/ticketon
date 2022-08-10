@@ -31,7 +31,7 @@ export default function NewHome() {
     
     console.log(currentCountry)
 
-    const baseUrl = "http://localhost:3003/allEvents"
+    const baseUrl = "https://ticketon-node-server.herokuapp.com/allEvents"
 
     useEffect(() => {
         const getPost = async () => {
@@ -52,8 +52,10 @@ export default function NewHome() {
         }
         getPost()
     }, []);
-    console.log(post)
-   
+
+    const newPost = post?.sort(item => item.dateCreated = -1)
+    console.log(newPost)
+    
     return (
         <div className='container mx-auto'>
             <h1 className='text-2xl text-center p-4 font-bold'>UPCOMING EVENTS </h1>

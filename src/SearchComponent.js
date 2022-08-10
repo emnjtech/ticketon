@@ -33,7 +33,7 @@ export default function SearchComponent({ title, eventId, image, artiste, dateAn
    return (
        <div>
            
-           <div className=" bg-white  ">
+           <div className=" bg-white my-[50px] ">
                {/*"   <!-- div with ribbon -->"*/}
 
                <div className="relative border w-[90%] mx-auto  overflow-hidden shadow-2xl rounded-2xl transition ease-in-out delay-300 hover:-translate-y-3 hover:scale-x-95 duration-300  ">
@@ -72,8 +72,8 @@ export default function SearchComponent({ title, eventId, image, artiste, dateAn
                            <Icon icon="entypo:share" className='text-2xl cursor-pointer' onClick={popShareDiv} />
                            <div className={!shareDiv ? 'hidden' : 'p-4 w-[50%] rounded-br-full h-[100px] grid grid-cols-3 shadow-xl roll-in-blurred-left'}>
                                <FacebookShareButton
-                                   url={`http://localhost:3000/eventSummary/${eventId}`}
-                                   quote={"You are invited to this" + { title } + "Click to your tickets now"}
+                                   url={`/eventSummary/${eventId}`}
+                                   quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
                                    hashtag="#event">
 
 
@@ -81,9 +81,9 @@ export default function SearchComponent({ title, eventId, image, artiste, dateAn
                                </FacebookShareButton>
 
                                <TwitterShareButton
-                                   url={`http://localhost:3000/eventSummary/${eventId}`}
-                                   quote={"hello"}
-                                   hashtag="#programing joke">
+                                   url={`/eventSummary/${eventId}`}
+                                   quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
+                                   hashtag="#event">
 
 
 
@@ -91,9 +91,9 @@ export default function SearchComponent({ title, eventId, image, artiste, dateAn
                                </TwitterShareButton>
 
                                <WhatsappShareButton
-                                   url={`http://localhost:3000/eventSummary/${eventId}`}
-                                   quote={"hello"}
-                                   hashtag="#programing joke">
+                                   url={`/eventSummary/${eventId}`}
+                                   quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
+                                   hashtag="#event">
 
 
 
@@ -101,9 +101,9 @@ export default function SearchComponent({ title, eventId, image, artiste, dateAn
                                </WhatsappShareButton>
 
                                <TelegramShareButton
-                                   url={`http://localhost:3000/eventSummary/${eventId}`}
-                                   quote={"hello"}
-                                   hashtag="#programing joke">
+                                   url={`/eventSummary/${eventId}`}
+                                   quote={"You are invited to this" + { title } + "Click to your tickets now"}
+                                   hashtag="#event">
 
 
 
@@ -111,9 +111,9 @@ export default function SearchComponent({ title, eventId, image, artiste, dateAn
                                </TelegramShareButton>
 
                                <EmailShareButton
-                                   url={`http://localhost:3000/eventSummary/${eventId}`}
-                                   quote={"hello"}
-                                   hashtag="#programing joke">
+                                   url={`/eventSummary/${eventId}`}
+                                   quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
+                                   hashtag="#event">
 
 
 

@@ -17,7 +17,7 @@ export default function Picknics() {
     const [searchText, setSearchText] = useState("")
     const [searchId, setSearchId] = useState("")
     const [wait, setWait] = useState(false)
-    const baseUrl = "http://localhost:3003/allEvents"
+    const baseUrl = "https://ticketon-node-server.herokuapp.com/allEvents"
 
     useEffect(() => {
         setWait(true)
@@ -79,9 +79,10 @@ export default function Picknics() {
 
                     <Icon icon="ic:outline-screen-search-desktop" className='text-3xl' />
                 </div>
-                <div className='w-full p-2'>
+                <div className='w-full p-2 '>
+
                     <input type='text' placeholder='Search event by title, performing Artistes, country, state or venue' className='h-[50px] w-full 
-           p-4 text-sm outline-none bg-transparent'
+         bg-transparent p-4 text-sm outline-none '
                         onChange={handleChange}
                         value={searchText}
 
@@ -90,7 +91,7 @@ export default function Picknics() {
                     {searchMatch && searchMatch.map((item) => (
                         <div className=' flex justify-start align-center p-4 h-[90px] border-b-2  cursor-pointer hover:bg-gradient-to-r shadow-xl hover:from-purple-300  bg-gradient-to-r from-purple-200 rounded-br-full'
                             onClick={() => { setSearchText(item.title); setSearchId(item.eventId); setSearchMatch([]) }}>
-                            <div className=' w-[350px]'> <h1 className='text-[10px] font-bold'>{item.title}</h1>
+                            <div className=' w-[220px]'> <h1 className='text-[10px] font-bold'>{item.title}</h1>
                                 <h1 className='text-[9px]'>{item.Artiste}</h1>
                                 <h1 className='text-[9px]'>{item.country} | {item.province}</h1>
                                 <h1 className='text-[8px]'>{item.venue} | {item.town}</h1>
@@ -98,7 +99,7 @@ export default function Picknics() {
 
                             </div>
                             <div>
-                                <img src={item.image} alt={item.alt} className='w-[50px] h-full' />
+                                <img src={item.image} alt={item.alt} className='w-[50px] h-full rounded-br-2xl' />
                             </div>
 
 
@@ -116,7 +117,7 @@ export default function Picknics() {
                 <MoonLoader loading={wait} width={100} color="purple" />
             </div>}
 
-            {mainSearch && <div className='grid md:grid-cols-3 grid-cols-2 gap-4 mt-[50px]'>
+            {mainSearch && <div className='grid md:grid-cols-3  gap-4 mt-[50px]'>
                 <SearchComponent
                     key={mainSearch.eventId}
                     title={mainSearch.title}
@@ -140,7 +141,7 @@ export default function Picknics() {
 
 
 
-            <div className='grid md:grid-cols-3 grid-cols-2 gap-4 mt-[50px]'>
+            <div className='grid md:grid-cols-3 gap-4 mt-[50px]'>
                 <Slide top>
                     <div>
                         {searchData &&

@@ -88,54 +88,54 @@ export default function EventComponent({ title, eventId, image, artiste, dateAnd
                     <div className='flex items-center justify-between'>
                         <Icon icon="entypo:share" className='text-2xl cursor-pointer' onClick={popShareDiv}/>
                         <div className={!shareDiv ? 'hidden' : 'p-4 w-[50%] rounded-br-full h-[100px] grid grid-cols-3 shadow-xl roll-in-blurred-left'}>
-                            <FacebookShareButton
-                                url={`http://localhost:3000/eventSummary/${eventId}`}
-                                quote={"You are invited to this" + {title} + "Click to your tickets now"}
-                                hashtag="#event">
-                               
-
-                                <FacebookIcon size={30} round={true} logoFillColor="white" className="p-1 hover:text-slate-400" />
-                            </FacebookShareButton>
-
-                            <TwitterShareButton
-                                url={`http://localhost:3000/eventSummary/${eventId}`}
-                                quote={"hello"}
-                                hashtag="#programing joke">
-                               
+                                <FacebookShareButton
+                                    url={`/eventSummary/${eventId}`}
+                                    quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
+                                    hashtag="#event">
 
 
-                                <TwitterIcon size={30} round={true} logoFillColor="white" className="p-1" />
-                            </TwitterShareButton>
+                                    <FacebookIcon size={30} round={true} logoFillColor="white" className="p-1 hover:text-slate-400" />
+                                </FacebookShareButton>
 
-                            <WhatsappShareButton
-                                url={`http://localhost:3000/eventSummary/${eventId}`}
-                                quote={"hello"}
-                                hashtag="#programing joke">
+                                <TwitterShareButton
+                                    url={`/eventSummary/${eventId}`}
+                                    quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
+                                    hashtag="#event">
 
 
 
-                                <WhatsappIcon size={30} round={true} logoFillColor="white" className="p-1" />
-                            </WhatsappShareButton>
+                                    <TwitterIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                                </TwitterShareButton>
 
-                            <TelegramShareButton
-                                url={`http://localhost:3000/eventSummary/${eventId}`}
-                                quote={"hello"}
-                                hashtag="#programing joke">
-
-
-
-                                <TelegramIcon size={30} round={true} logoFillColor="white" className="p-1" />
-                            </TelegramShareButton>
-
-                            <EmailShareButton
-                                url={`http://localhost:3000/eventSummary/${eventId}`}
-                                quote={"hello"}
-                                hashtag="#programing joke">
+                                <WhatsappShareButton
+                                    url={`/eventSummary/${eventId}`}
+                                    quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
+                                    hashtag="#event">
 
 
 
-                                <EmailIcon size={30} round={true} logoFillColor="white" className="p-1" />
-                            </EmailShareButton>
+                                    <WhatsappIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                                </WhatsappShareButton>
+
+                                <TelegramShareButton
+                                    url={`/eventSummary/${eventId}`}
+                                    quote={"You are invited to this" + { title } + "Click to your tickets now"}
+                                    hashtag="#event">
+
+
+
+                                    <TelegramIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                                </TelegramShareButton>
+
+                                <EmailShareButton
+                                    url={`/eventSummary/${eventId}`}
+                                    quote={"You are invited to this" + { title } + "Click to buy your tickets now"}
+                                    hashtag="#event">
+
+
+
+                                    <EmailIcon size={30} round={true} logoFillColor="white" className="p-1" />
+                                </EmailShareButton>
                         </div>
 
                        <Link to={`/eventSummary/${eventId}`}> <button className='flex items-center justify-between px-4 py-2 rounded-full bg-[#C25DC4]'><Icon icon="material-symbols:event-available-rounded" className='text-2xl p-1 ' />

@@ -17,7 +17,7 @@ export default function SearchResults() {
   
 
   console.log(searchText)
-  const baseUrl = "http://localhost:3003/allEvents"
+  const baseUrl = "https://ticketon-node-server.herokuapp.com/allEvents"
 
   useEffect(() => {
     const getPost = async () => {
@@ -76,12 +76,13 @@ export default function SearchResults() {
   return (
     <div className='container mx-auto p-4'>
       <h1 className='text-sm text-center p-4 font-bold'>Search events by title, venue, Perfoming Artistes/Speakers, country or category</h1>
-      <div className='flex justify-center align-center   bg-gradient-to-r from-pink-100'>
+      <div className=' flex justify-center align-center  bg-gradient-to-r from-pink-100'>
         <div className='flex justify-center p-4'>
 
           <Icon icon="ic:outline-screen-search-desktop" className='text-3xl' />
         </div>
-        <div className='w-full p-2'>
+        <div className='w-full p-2 '>
+          
           <input type='text' placeholder='Search event by title, performing Artistes, country, state or venue' className='h-[50px] w-full 
          bg-transparent p-4 text-sm outline-none '
             onChange={handleChange}
@@ -92,15 +93,15 @@ export default function SearchResults() {
           {searchMatch && searchMatch.map((item)=> (
             <div className=' flex justify-start align-center p-4 h-[90px] border-b-2  cursor-pointer hover:bg-gradient-to-r shadow-xl hover:from-purple-300  bg-gradient-to-r from-purple-200 rounded-br-full'
               onClick={() => { setSearchText(item.title); setSearchId(item.eventId); setSearchMatch([]) }}>
-              <div className=' w-[350px]'> <h1 className='text-[10px] font-bold'>{item.title}</h1>
+              <div className='w-[220px] '> <h1 className='text-[10px] font-bold'>{item.title}</h1>
                 <h1 className='text-[9px]'>{item.Artiste}</h1>
                 <h1 className='text-[9px]'>{item.country} | {item.province}</h1>
                 <h1 className='text-[8px]'>{item.venue} | {item.town}</h1>
                 <h1 className='text-[8px]'>{item.category} </h1>
               
               </div>
-              <div>
-                <img src={item.image} alt={item.alt} className='w-[50px] h-full'/>
+              <div >
+                <img src={item.image} alt={item.alt} className='w-[50px] h-full rounded-br-2xl'/>
                 </div>
             
               
@@ -113,7 +114,7 @@ export default function SearchResults() {
       </div>
 
       <div>
-        {!searchData && !mainSearch && <div className='mx-auto w-[40%]'>
+        {!searchData && !mainSearch && <div className='mx-auto md:w-[40%] w-full'>
           
           <img src={img} alt="search" width={500} /></div>}
         <div className='grid md:grid-cols-3 gap-4 w-[90%] mx-auto p-5'>
@@ -134,6 +135,7 @@ export default function SearchResults() {
               alt={mainSearch.alt} />
 
           </div>}
+
         {searchData && searchData.map(item => (<div> 
         <SearchComponent
             key={item.eventId}

@@ -49,8 +49,6 @@ export default function EventFullDisplay() {
     }
     console.log(bookBasket)
 
-   
-
  
     const handleBook = (item) => {
         setBookBasket([...bookBasket, item])
@@ -60,7 +58,7 @@ export default function EventFullDisplay() {
         setBookBasket(bookBasket.filter(item => item.ticketId !== ticketId))
     }
     const encodedValue = encodeURIComponent(eventId)
-    const baseUrl = `http://localhost:3003/allEvents?eventId=${encodedValue}`
+    const baseUrl = `https://ticketon-node-server.herokuapp.com/allEvents?eventId=${encodedValue}`
    useEffect(() => {
        const getPost = async () => {
            setWait(true)
@@ -74,7 +72,7 @@ export default function EventFullDisplay() {
        }
        getPost()
    }, []);
-    
+  
     const handleBooking = () => {
         navigate ("/generateTicket", {state: bookBasket})
     }
@@ -85,7 +83,7 @@ export default function EventFullDisplay() {
         setLoading2(true)
         bookBasket.map(item => (
         axios
-            .post("http://localhost:3003/saveEvents", {
+                .post("https://ticketon-node-server.herokuapp.com/saveEvents", {
                 eventId: item.eventId,
                 title:item.title,
                 image: item.image,
@@ -98,6 +96,7 @@ export default function EventFullDisplay() {
                 country: item.country,
                 province: item.province,
                 dateAndTime: item.dateAndTime,
+                dateBooked: Date.now()
                            
             }).then(function (response) {
                 setLoading2(false)
@@ -122,10 +121,10 @@ export default function EventFullDisplay() {
         }
     }
 
-    const getPost = post?.find((item) => item.eventId === eventId);
+    const getPost = post?.find((item) => item.eventId.toLowerCase() === eventId.toLowerCase());
     const newDate = new Date(getPost?.dateAndTime)
     const eventDate = newDate?.toLocaleString('en-US', { hour12: true, dateStyle: 'full', timeStyle: "full" })
-    
+    console.log(getPost)
    // const newDate = getPost.dateAndTime
     console.log(newDate.toLocaleString('en-US', { hour12: true, dateStyle: 'full', timeStyle:"full" }))
     return (
@@ -184,7 +183,7 @@ export default function EventFullDisplay() {
                                         <Icon icon="entypo:share" className='text-2xl cursor-pointer' onClick={popShareDiv} />
                                         <div className={!shareDiv ? 'hidden' : 'p-4 w-full rounded-br-full h-[100px] flex justify-center items-center shadow-xl slide-in-blurred-left'}>
                                             <FacebookShareButton
-                                                url={`http://localhost:3000/eventSummary/${getPost.eventId}`}
+                                                url={`/eventSummary/${getPost.eventId}`}
                                                 quote={`You are invited to this  ${ getPost.title } Click to your tickets now`}
                                                 hashtag="#event">
 
@@ -193,7 +192,7 @@ export default function EventFullDisplay() {
                                             </FacebookShareButton>
 
                                             <TwitterShareButton
-                                                url={`http://localhost:3000/eventSummary/${getPost.eventId}`}
+                                                url={`/eventSummary/${getPost.eventId}`}
                                                 quote={"hello"}
                                                 hashtag="#programing joke">
 
@@ -203,7 +202,7 @@ export default function EventFullDisplay() {
                                             </TwitterShareButton>
 
                                             <WhatsappShareButton
-                                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                                url={`/eventSummary/${eventId}`}
                                                 quote={"hello"}
                                                 hashtag="#programing joke">
 
@@ -213,7 +212,7 @@ export default function EventFullDisplay() {
                                             </WhatsappShareButton>
 
                                             <TelegramShareButton
-                                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                                url={`/eventSummary/${eventId}`}
                                                 quote={"hello"}
                                                 hashtag="#programing joke">
 
@@ -223,7 +222,7 @@ export default function EventFullDisplay() {
                                             </TelegramShareButton>
 
                                             <EmailShareButton
-                                                url={`http://localhost:3000/eventSummary/${eventId}`}
+                                                url={`/eventSummary/${eventId}`}
                                                 quote={"hello"}
                                                 hashtag="#programing joke">
 
@@ -293,7 +292,7 @@ export default function EventFullDisplay() {
                   
                         
 
-                        {getPost.ticketFrom === null &&
+                        {getPost.ticketFrom === 0 &&
                             <div className=' mt-8'>
                                 <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2' >
                                     <div className='font-bold p-2'>Free event</div>
@@ -312,7 +311,8 @@ export default function EventFullDisplay() {
                                         eventId: getPost.eventId,
                                         userId: currUser.email,
                                         venue: getPost.venue,
-                                        country: getPost.country,
+                                       country: getPost.country,
+                                       dateBooked: Date.now(),
                                         province:getPost.province,
                                         dateAndTime:getPost.dateAndTime
 
@@ -320,7 +320,7 @@ export default function EventFullDisplay() {
                                     </div>}
                                     </div></div>}
                         
-                            {getPost.ticketLevels.ticket1 && getPost.priceLevels.price1 &&
+                            {getPost.ticketLevels.ticket1 && getPost.priceLevels.price1 !== 0 &&
                                 <div >
                                     <div className='w-full grid grid-cols-4 items-center bg-slate-100 mb-2  mt-8' >
                                         <div className='font-bold p-2'>{getPost.ticketLevels.ticket1}</div>
@@ -341,7 +341,8 @@ export default function EventFullDisplay() {
                                             venue: getPost.venue,
                                             country: getPost.country,
                                             province: getPost.province,
-                                            dateAndTime: getPost.dateAndTime
+                                            dateAndTime: getPost.dateAndTime,
+                                            dateBooked: Date.now(),
 
 
                                         })} >Add</button>
@@ -371,7 +372,8 @@ export default function EventFullDisplay() {
                                               venue: getPost.venue,
                                               country: getPost.country,
                                               province: getPost.province,
-                                              dateAndTime: getPost.dateAndTime
+                                              dateAndTime: getPost.dateAndTime,
+                                              dateBooked: Date.now(),
 
 
 
@@ -404,7 +406,8 @@ export default function EventFullDisplay() {
                                               venue: getPost.venue,
                                               country: getPost.country,
                                               province: getPost.province,
-                                              dateAndTime: getPost.dateAndTime
+                                              dateAndTime: getPost.dateAndTime,
+                                              dateBooked: Date.now(),
 
                                         })} >Add</button>}
                                         
@@ -435,6 +438,7 @@ export default function EventFullDisplay() {
                                              country: getPost.country,
                                              province: getPost.province,
                                              dateAndTime: getPost.dateAndTime,
+                                             dateBooked: Date.now(),
                                              
 
 
@@ -465,7 +469,8 @@ export default function EventFullDisplay() {
                                                venue: getPost.venue,
                                                country: getPost.country,
                                                province: getPost.province,
-                                               dateAndTime: getPost.dateAndTime
+                                               dateAndTime: getPost.dateAndTime,
+                                               dateBooked: Date.now(),
                                             })} >Add</button>}
                                         
                                         </div>

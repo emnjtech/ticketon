@@ -21,7 +21,7 @@ useEffect(() => {
       setLoading(true)
       bookBasket?.map(item => (
         axios
-          .post("http://localhost:3003/generateTickets", {
+          .post("http:https://ticketon-node-server.herokuapp.com/generateTickets", {
             eventId: item.eventId,
             title: item.title,
             image: item.image,

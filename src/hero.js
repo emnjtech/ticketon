@@ -20,7 +20,7 @@ export default function Hero() {
 const navigate = useNavigate()
 
 
-   const baseUrl = 'http://localhost:3003/allEvents?title'
+    const baseUrl = 'https://ticketon-node-server.herokuapp.com/allEvents?title'
 
     const getData = async () => {
         const res = await axios.get(baseUrl)
@@ -81,7 +81,7 @@ const navigate = useNavigate()
             <div className='relative'>
                 <img src={bg} alt="bgimage" className='h-[700px] w-full' />
             </div>
-            <div className='absolute right-0 left-0 mx-auto top-[200px] w-[90%] '><h1 className='text-white text-center'>EXPLORE CONCERTS AND EVENTS NEAR YOU</h1></div>
+            <div className='absolute right-0 left-0 mx-auto top-[200px] w-[90%] border-l-2 border-yellow-500'><h1 className=' px-3 text-white text-lg  md:text-3xl'>Create your events & generate tickets for free.</h1><h1 className='text-white px-3 text-sm mdtext-lg'>Explore concerts and events near you</h1></div>
             <div className='absolute w-[90%]  md:ml-[60px] mx-[25px] top-[40%]  md:bg-white rounded-full'>
 
                 <div className='grid md:grid-cols-3 md:h-[70px] md:gap-0 gap-4 p-3 outline-none w-full'>

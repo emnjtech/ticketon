@@ -19,6 +19,7 @@ import Picknics from './Picknics'
 import Food from './Food'
 import Religion from './Religion'
 import Seminars from './Seminars'
+import PageNotFound from './PageNotFound'
 
 function ErrorHandler({ error }) {
   return (
@@ -131,7 +132,13 @@ export default function App() {
               <Footer />
             </>
           } />
+          <Route path="*" element={
+            <>
 
+              <PageNotFound />
+              <Footer />
+
+            </>} />
 
       </Routes>
     </div>
